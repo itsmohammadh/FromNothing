@@ -1,0 +1,36 @@
+// SPDX-License-Identifier: GPL-3.0
+
+pragma solidity ^0.8.0;
+
+contract subCoin{
+
+    address public owner;
+
+    mapping( address => uint) public Balances; 
+
+    event transferMassagge(address from, address to, uint amount);
+
+constructor(){
+    owner = msg.sender;
+}
+  
+function mint( address _owner, uint amount ) public {
+    require( _owner == owner," your not a fucking owner dude ");
+    Balances[owner] += amount;
+}
+
+error noneEnogh( uint requested, uint avaliable);
+
+function sendCoin( address receiver, uint amount) public {
+    if ( amount > Balances[msg.sender] ){
+        revert noneEnogh ({
+            requested : amount,
+            avaliable : Balances[msg.sender]
+        });
+}
+    Balances[receiver] += amount;
+    Balances[msg.sender] -= amount;
+
+    emit transferMassagge(msg.sender, receiver, amount);   
+}
+}
